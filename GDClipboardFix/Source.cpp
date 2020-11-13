@@ -83,17 +83,21 @@ void copy_to_clipboard() {
 		mov edi, [clipboard_string_position]
 		mov ecx, [clipboard_string_length]
 		xor ebx, ebx
+
 		start_loop :
-		mov al, [edi]
+
+			mov al, [edi]
 			mov[esi], al
 			inc esi
 			inc edi
 			inc ebx
 			cmp ebx, ecx
-			jl start_loop
-			mov esp, ebp
-			pop ebp
-			popad
+
+		jl start_loop
+
+		mov esp, ebp
+		pop ebp
+		popad
 
 	}
 
@@ -123,8 +127,11 @@ __declspec(naked) void clipboard_hook() {
 }
 
 DWORD WINAPI main_hook(LPVOID lpParam) {
+
 	memory::place_jump(start_clipboard_hook, (DWORD)clipboard_hook, 5);
+
 	return TRUE;
+
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
